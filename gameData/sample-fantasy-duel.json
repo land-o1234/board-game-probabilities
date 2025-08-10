@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "0.1.0",
+  "name": "Sample Fantasy Duel",
+  "slug": "sample-fantasy-duel",
+  "bgg_id": 0,
+  "description": "A sample game file demonstrating deck and dice structures.",
+  "tags": ["demo", "cards", "dice"],
+  "components": {
+    "cards": [
+      {
+        "deck_name": "Base Deck",
+        "total_cards": 40,
+        "symbols": [
+          { "name": "Fire", "count": 8 },
+            { "name": "Water", "count": 6 },
+            { "name": "Earth", "count": 5 },
+            { "name": "Air", "count": 7 }
+        ]
+      },
+      {
+        "deck_name": "Power Deck",
+        "total_cards": 20,
+        "symbols": [
+          { "name": "Epic", "count": 4 },
+          { "name": "Rare", "count": 6 }
+        ]
+      }
+    ],
+    "dice": [
+      {
+        "name": "Combat Dice",
+        "description": "Two standard d6 for combat resolution.",
+        "dice": [
+          { "faces": 6 },
+          { "faces": 6 }
+        ]
+      },
+      {
+        "name": "Custom Rune Die",
+        "description": "A custom die with uneven faces.",
+        "dice": [
+          { "faces": ["Skull","Sword","Sword","Shield","Rune","Blank"] }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "created": "2025-08-10T00:00:00Z",
+    "source": "manual",
+    "attribution": "Contributor Handle"
+  }
+}

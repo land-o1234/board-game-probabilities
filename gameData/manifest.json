@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "0.1.0",
+  "games": [
+    {
+      "slug": "sample-fantasy-duel",
+      "name": "Sample Fantasy Duel",
+      "tags": ["cards", "dice"],
+      "shortDescription": "Demo game entry showing cards + dice components.",
+      "schemaVersion": "0.1.0"
+    }
+  ]
+}

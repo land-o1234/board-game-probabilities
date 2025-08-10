@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Board Game Probability Site</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Board Game Probabilities</title>
+  <meta name="description" content="Search board games and explore probability tools for cards, dice, and components." />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <header>
-        <h1>Board Game Probabilities</h1>
-    </header>
-    <main>
-        Welcome to the Board Game Probability site! Start by searching for a game and then find your probabilities for various components.
-        <form id="search-form">
-            <input type="text" id="game-search" placeholder="Search for a game..." required>
-            <button type="submit">Search</button>
-        </form>
-        <div id="results"></div>
-    </main>
-    <script src="js/main.js"></script>
+  <header class="site-header">
+    <h1><a href="./">Board Game Probabilities</a></h1>
+    <nav>
+      <a href="#/">Home</a>
+      <a href="#/games">Games</a>
+      <a href="#/about">About</a>
+      <a href="#/contribute">Contribute</a>
+    </nav>
+  </header>
+
+  <main id="app-root">
+    <noscript>
+      <p>This site requires JavaScript to provide interactive probability tools. Enable JavaScript to use search and calculators.</p>
+    </noscript>
+    <!-- Dynamic content injected here -->
+  </main>
+
+  <footer class="site-footer">
+    <p>Open source. Add or improve games via pull request. See Contribute page.</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>

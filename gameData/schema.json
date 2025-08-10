@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/board-game-probabilities/schema.json",
+  "title": "Board Game Probability Game Data",
+  "type": "object",
+  "required": ["schemaVersion", "name", "slug", "components"],
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9\\-]+$" },
+    "bgg_id": { "type": ["integer","null"], "minimum": 0 },
+    "description": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "components": {
+      "type": "object",
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["total_cards", "symbols"],
+            "properties": {
+              "deck_name": { "type": "string" },
+              "total_cards": { "type": "integer", "minimum": 1 },
+              "symbols": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "count"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "count": { "type": "integer", "minimum": 0 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dice": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dice"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "dice": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "faces": {
+                      "oneOf": [
+                        { "type": "integer", "minimum": 2 },
+                        { "type": "array", "items": { "type": ["integer","string"] }, "minItems": 2 }
+                      ]
+                    }
+                  },
+                  "required": ["faces"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "created": { "type": "string", "format": "date-time" },
+        "source": { "type": "string" },
+        "attribution": { "type": "string" }
+      }
+    }
+  }
+}
