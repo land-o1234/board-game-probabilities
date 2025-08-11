@@ -3,6 +3,7 @@ import { hypergeometricAtLeast } from '../utils/probability.js';
 import { diceSumDistribution, normalizeDistribution } from '../utils/probability.js';
 
 export async function renderGameDetail({ slug }) {
+  console.log('GameDetail rendering with slug:', slug);
   try {
     const game = await loadGame(slug);
     return gameDetailHTML(game, slug);
