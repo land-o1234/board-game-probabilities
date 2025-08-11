@@ -5,6 +5,7 @@
   "bgg_id": 0,
   "description": "A sample game file demonstrating deck and dice structures.",
   "tags": ["demo", "cards", "dice"],
+  "status": "complete",
   "components": {
     "cards": [
       {

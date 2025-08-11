@@ -2,24 +2,230 @@ import { loadGame } from '../data/dataLoader.js';
 import { hypergeometricAtLeast } from '../utils/probability.js';
 import { diceSumDistribution, normalizeDistribution } from '../utils/probability.js';
 
+// Global reference to current game data
+let currentGameData = null;
+let effectiveGameData = null; // Game data with expansions applied
+
+// Store variables globally for debugging and access from window functions
+window.currentGameData = null;
+window.effectiveGameData = null;
+
 export async function renderGameDetail({ slug }) {
   console.log('GameDetail rendering with slug:', slug);
   try {
-    const game = await loadGame(slug);
-    return gameDetailHTML(game, slug);
+    let game = await loadGame(slug);
+    game = loadExpansionStates(game); // Load saved expansion states
+    currentGameData = game; // Store for toggle functionality
+    window.currentGameData = game; // Also store globally
+    effectiveGameData = applyExpansions(game); // Apply enabled expansions
+    window.effectiveGameData = effectiveGameData; // Store globally
+    return gameDetailHTML(effectiveGameData, slug);
   } catch (e) {
     return `<h2>Game Not Found</h2><p class="error">${e.message}</p>`;
   }
 }
 
+// Global function for expansion toggling
+window.toggleExpansion = function(index, enabled) {
+  if (!window.currentGameData || !window.currentGameData.expansions) return;
+  
+  // Update the expansion state
+  window.currentGameData.expansions[index].enabled = enabled;
+  currentGameData = window.currentGameData; // Sync module variable
+  
+  // Regenerate effective game data with expansions applied
+  window.effectiveGameData = window.applyExpansions(window.currentGameData);
+  effectiveGameData = window.effectiveGameData; // Sync module variable
+  
+  console.log('Toggled expansion', index, 'to', enabled);
+  console.log('New effective game data:', window.effectiveGameData);
+  
+  // Update the visual status
+  const expansionCard = document.querySelector(`.expansion-card[data-expansion-index="${index}"]`);
+  if (expansionCard) {
+    const statusSpan = expansionCard.querySelector('.expansion-status');
+    const newStatusIcon = enabled ? '✅ Enabled' : '🔒 Disabled';
+    const newStatusClass = enabled ? 'expansion-enabled' : 'expansion-disabled';
+    
+    // Update status text
+    statusSpan.textContent = newStatusIcon;
+    
+    // Update card class
+    expansionCard.className = `expansion-card ${newStatusClass}`;
+    expansionCard.setAttribute('data-expansion-index', index);
+    
+    // Update the enabled count
+    const enabledCount = window.currentGameData.expansions.filter(e => e.enabled).length;
+    const totalCount = window.currentGameData.expansions.length;
+    const countElement = document.getElementById('expansion-count');
+    if (countElement) {
+      countElement.textContent = `${enabledCount}/${totalCount}`;
+    }
+    
+    // Store in localStorage for persistence
+    const storageKey = `expansions_${window.currentGameData.slug}`;
+    const expansionStates = window.currentGameData.expansions.map(exp => exp.enabled);
+    localStorage.setItem(storageKey, JSON.stringify(expansionStates));
+    
+    // Update the cards section with new data
+    window.updateCardsSection();
+    
+    // Update the dice section with new data
+    window.updateDiceSection();
+  }
+};
+
+// Function to update the cards section with current effective game data
+function updateCardsSection() {
+  // Find the cards section by looking for the h3 with "Card Decks" text
+  const allSections = document.querySelectorAll('.section');
+  let cardsSectionElement = null;
+  
+  allSections.forEach(section => {
+    const h3 = section.querySelector('h3');
+    if (h3 && h3.textContent.includes('Card Decks')) {
+      cardsSectionElement = section;
+    }
+  });
+  
+  console.log('Found cards section element:', cardsSectionElement);
+  console.log('Effective game data cards:', window.effectiveGameData?.components?.cards);
+  
+  if (cardsSectionElement && window.effectiveGameData?.components?.cards?.length) {
+    const newCardsHTML = cardsSection(window.effectiveGameData);
+    console.log('Generated new cards HTML:', newCardsHTML);
+    cardsSectionElement.outerHTML = newCardsHTML;
+  }
+}
+
+// Function to update the dice section with current effective game data
+function updateDiceSection() {
+  // Find the dice section by looking for the h3 with "Dice" text
+  const allSections = document.querySelectorAll('.section');
+  let diceSectionElement = null;
+  
+  allSections.forEach(section => {
+    const h3 = section.querySelector('h3');
+    if (h3 && h3.textContent.includes('Dice')) {
+      diceSectionElement = section;
+    }
+  });
+  
+  console.log('Found dice section element:', diceSectionElement);
+  console.log('Effective game data dice:', window.effectiveGameData?.components?.dice);
+  
+  if (diceSectionElement && window.effectiveGameData?.components?.dice?.length) {
+    const newDiceHTML = diceSection(window.effectiveGameData);
+    console.log('Generated new dice HTML:', newDiceHTML);
+    diceSectionElement.outerHTML = newDiceHTML;
+  }
+}
+
+// Make helper functions globally accessible after they're defined
+window.applyExpansions = applyExpansions;
+window.updateCardsSection = updateCardsSection;
+window.updateDiceSection = updateDiceSection;
+
+// Function to load expansion states from localStorage
+function loadExpansionStates(game) {
+  const storageKey = `expansions_${game.slug}`;
+  const savedStates = localStorage.getItem(storageKey);
+  
+  if (savedStates) {
+    try {
+      const states = JSON.parse(savedStates);
+      if (states.length === game.expansions.length) {
+        game.expansions.forEach((expansion, index) => {
+          expansion.enabled = states[index];
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to load expansion states:', e);
+    }
+  }
+  
+  return game;
+}
+
+// Function to apply enabled expansions to game data
+function applyExpansions(game) {
+  if (!game.expansions || !game.expansions.length) {
+    return game;
+  }
+  
+  // Deep clone the game data to avoid mutating the original
+  const modifiedGame = JSON.parse(JSON.stringify(game));
+  
+  // Apply enabled expansions
+  game.expansions.forEach(expansion => {
+    if (!expansion.enabled) return;
+    
+    // Apply deck modifications
+    if (expansion.adds_to && expansion.adds_to.cards) {
+      Object.entries(expansion.adds_to.cards).forEach(([deckName, deckData]) => {
+        const targetDeck = modifiedGame.components.cards.find(deck => deck.deck_name === deckName);
+        if (targetDeck) {
+          // Add new symbols to existing deck
+          deckData.symbols.forEach(symbol => {
+            const existingSymbol = targetDeck.symbols.find(s => s.name === symbol.name);
+            if (existingSymbol) {
+              // Add to existing symbol count
+              existingSymbol.count += symbol.count;
+            } else {
+              // Add new symbol
+              targetDeck.symbols.push({ ...symbol });
+            }
+            // Update total cards
+            targetDeck.total_cards += symbol.count;
+          });
+        }
+      });
+    }
+    
+    // Add new card decks
+    if (expansion.new_components && expansion.new_components.cards) {
+      if (!modifiedGame.components.cards) {
+        modifiedGame.components.cards = [];
+      }
+      expansion.new_components.cards.forEach(newDeck => {
+        modifiedGame.components.cards.push({ ...newDeck });
+      });
+    }
+    
+    // Add new dice sets
+    if (expansion.new_components && expansion.new_components.dice) {
+      if (!modifiedGame.components.dice) {
+        modifiedGame.components.dice = [];
+      }
+      expansion.new_components.dice.forEach(newDice => {
+        modifiedGame.components.dice.push({ ...newDice });
+      });
+    }
+  });
+  
+  return modifiedGame;
+}
+
 function gameDetailHTML(game, slug) {
   return `
-    <h2>${game.name}</h2>
-    <p>${game.description || ''}</p>
-    <div class="muted">
-      ${(game.tags || []).map(t=>`<span class="badge">${t}</span>`).join(' ')}
-      ${game.bgg_id ? `<a class="badge" target="_blank" rel="noopener" href="https://boardgamegeek.com/boardgame/${game.bgg_id}">BGG</a>` : ''}
+    <div class="game-header">
+      <div class="game-title-section">
+        <h2>${game.name}</h2>
+        ${game.bgg_id ? `
+          <a class="bgg-button" target="_blank" rel="noopener" href="https://boardgamegeek.com/boardgame/${game.bgg_id}" title="View on BoardGameGeek">
+            <span class="bgg-icon">🎲</span>
+            <span class="bgg-text">View on BGG</span>
+          </a>
+        ` : ''}
+      </div>
+      <p>${game.description || ''}</p>
+      <div class="muted">
+        ${(game.tags || []).map(t=>`<span class="badge">${t}</span>`).join(' ')}
+        ${statusBadge(game.status)}
+      </div>
     </div>
+    ${tasksSection(game)}
+    ${expansionsSection(game)}
     ${cardsSection(game)}
     ${diceSection(game)}
     <div class="section">
@@ -127,13 +333,16 @@ document.addEventListener('submit', (e) => {
 });
 
 async function runCardCalc(deckIndex, symbolName, draws, atLeast) {
-  // Need currently loaded game slug from location:
-  const slug = window.location.hash.replace('#/game/', '');
-  const { loadGame } = await import('../data/dataLoader.js');
-  const game = await loadGame(slug);
-  const deck = game.components.cards[deckIndex];
+  // Use the current effective game data instead of loading fresh data
+  if (!window.effectiveGameData || !window.effectiveGameData.components?.cards) {
+    console.error('No effective game data available for calculation');
+    return;
+  }
+  
+  const deck = window.effectiveGameData.components.cards[deckIndex];
   const symbol = deck.symbols.find(s => s.name === symbolName);
   if (!symbol) return;
+  
   const resultDiv = document.getElementById(`result-${deckIndex}-${encodeURIComponent(symbol.name)}`);
   const N = deck.total_cards;
   const K = symbol.count;
@@ -176,10 +385,14 @@ document.addEventListener('click', async (e) => {
   const btn = e.target;
   if (btn.dataset.diceDist !== undefined) {
     const idx = parseInt(btn.dataset.diceDist,10);
-    const slug = window.location.hash.replace('#/game/', '');
-    const { loadGame } = await import('../data/dataLoader.js');
-    const game = await loadGame(slug);
-    const diceSet = game.components.dice[idx];
+    
+    // Use effective game data instead of loading fresh data
+    if (!window.effectiveGameData || !window.effectiveGameData.components?.dice) {
+      console.error('No effective game data available for dice calculation');
+      return;
+    }
+    
+    const diceSet = window.effectiveGameData.components.dice[idx];
     const diceArray = diceSet.dice || [];
     const distMap = diceSumDistribution(diceArray.map(d => ({
       faces: Array.isArray(d.faces) ? d.faces : Array.from({ length: d.faces || 6 }, (_,i)=>i+1)
@@ -227,3 +440,147 @@ document.addEventListener('change', (e) => {
     });
   }
 });
+
+function statusBadge(status) {
+  if (!status || status === 'complete') return '';
+  
+  const statusConfig = {
+    'partial': { label: 'Partial Data', class: 'status-partial', emoji: '⚠️' },
+    'incomplete': { label: 'Incomplete', class: 'status-incomplete', emoji: '🚧' }
+  };
+  
+  const config = statusConfig[status] || statusConfig['incomplete'];
+  return `<span class="badge ${config.class}">${config.emoji} ${config.label}</span>`;
+}
+
+function expansionsSection(game) {
+  if (!game.expansions || !game.expansions.length) return '';
+  
+  const expansionCards = game.expansions.map((expansion, index) => {
+    const statusIcon = expansion.enabled ? '✅ Enabled' : '🔒 Disabled';
+    const statusClass = expansion.enabled ? 'expansion-enabled' : 'expansion-disabled';
+    
+    let contentHTML = '';
+    
+    // Show what this expansion adds to existing decks
+    if (expansion.adds_to && expansion.adds_to.cards) {
+      const addsToDecksList = Object.entries(expansion.adds_to.cards).map(([deckName, deckData]) => {
+        const symbolsList = deckData.symbols.map(symbol => 
+          `<span class="symbol-count">${symbol.name}: ${symbol.count}</span>`
+        ).join(', ');
+        return `<li><strong>${deckName}:</strong> ${symbolsList}</li>`;
+      }).join('');
+      
+      contentHTML += `
+        <div class="expansion-modifications">
+          <h6>Adds to Existing Decks:</h6>
+          <ul class="deck-modifications">${addsToDecksList}</ul>
+        </div>
+      `;
+    }
+    
+    // Show new components this expansion introduces
+    if (expansion.new_components) {
+      let newComponentsHTML = '';
+      
+      if (expansion.new_components.cards) {
+        const newDecksList = expansion.new_components.cards.map(deck => {
+          const symbolsList = deck.symbols.map(symbol => 
+            `<span class="symbol-count">${symbol.name}: ${symbol.count}</span>`
+          ).join(', ');
+          return `<li><strong>${deck.deck_name}</strong> (${deck.total_cards} cards): ${symbolsList}</li>`;
+        }).join('');
+        
+        newComponentsHTML += `
+          <div class="new-component-section">
+            <h6>New Card Decks:</h6>
+            <ul class="new-decks">${newDecksList}</ul>
+          </div>
+        `;
+      }
+      
+      if (expansion.new_components.dice) {
+        const newDiceList = expansion.new_components.dice.map(diceSet => {
+          return `<li><strong>${diceSet.name}</strong>${diceSet.description ? `: ${diceSet.description}` : ''}</li>`;
+        }).join('');
+        
+        newComponentsHTML += `
+          <div class="new-component-section">
+            <h6>New Dice Sets:</h6>
+            <ul class="new-dice">${newDiceList}</ul>
+          </div>
+        `;
+      }
+      
+      if (newComponentsHTML) {
+        contentHTML += `
+          <div class="expansion-new-components">
+            <h6>New Components:</h6>
+            ${newComponentsHTML}
+          </div>
+        `;
+      }
+    }
+    
+    return `
+      <div class="expansion-card ${statusClass}" data-expansion-index="${index}">
+        <div class="expansion-header">
+          <h5>${expansion.name}</h5>
+          <div class="expansion-toggle">
+            <label class="toggle-switch">
+              <input type="checkbox" ${expansion.enabled ? 'checked' : ''} onchange="toggleExpansion(${index}, this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="expansion-status">${statusIcon}</span>
+          </div>
+        </div>
+        ${expansion.description ? `<p class="expansion-description">${expansion.description}</p>` : ''}
+        ${contentHTML}
+      </div>
+    `;
+  }).join('');
+  
+  const enabledCount = game.expansions.filter(e => e.enabled).length;
+  const totalCount = game.expansions.length;
+  
+  return `
+    <div class="section expansions-section">
+      <h3>🚀 Expansions</h3>
+      <p class="expansion-summary">
+        <strong><span id="expansion-count">${enabledCount}/${totalCount}</span> expansions enabled</strong> - 
+        Toggle expansion switches to modify the game content below.
+      </p>
+      <div class="expansions-grid">
+        ${expansionCards}
+      </div>
+    </div>
+  `;
+}
+
+function tasksSection(game) {
+  if (!game.tasks || !game.tasks.length) return '';
+  
+  const taskList = game.tasks.map(task => {
+    const icon = task.completed ? '✅' : '❌';
+    const className = task.completed ? 'task-completed' : 'task-pending';
+    return `<li class="${className}">${icon} ${task.description}</li>`;
+  }).join('');
+  
+  const completedCount = game.tasks.filter(t => t.completed).length;
+  const totalCount = game.tasks.length;
+  const progressPercent = Math.round((completedCount / totalCount) * 100);
+  
+  return `
+    <div class="section tasks-section">
+      <h3>📋 Development Tasks</h3>
+      <div class="task-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${progressPercent}%"></div>
+        </div>
+        <span class="progress-text">${completedCount}/${totalCount} completed (${progressPercent}%)</span>
+      </div>
+      <ul class="task-list">${taskList}</ul>
+      <p class="muted">This game is a work in progress. Want to help? Check out our <a href="#/contribute">contribution guide</a>!</p>
+    </div>
+  `;
+}
