@@ -1,15 +1,15 @@
 :root {
-  --bg: #1a0d2e;
-  --bg-alt: #2d1b4e;
+  --bg: #0f1419;
+  --bg-alt: #1a2332;
   --fg: #f0f4ff;
-  --accent: #ff6b35;
-  --accent-alt: #ff8c42;
-  --accent-light: #ffad5a;
-  --blue-accent: #00d4ff;
-  --purple-accent: #8e44ad;
-  --green-accent: #00ff88;
+  --accent: #00d4aa;
+  --accent-alt: #00b894;
+  --accent-light: #55efc4;
+  --blue-accent: #74b9ff;
+  --purple-accent: #a29bfe;
+  --green-accent: #00b894;
   --danger: #ff4757;
-  --success: #2ed573;
+  --success: #00b894;
   --radius: 12px;
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
 }
@@ -52,7 +52,7 @@ h2, h3 { margin-top: 2rem; font-weight: 700; color: var(--accent); }
   margin-top: 1rem;
 }
 .card {
-  background: linear-gradient(135deg, var(--bg-alt), #3d2a5c);
+  background: linear-gradient(135deg, var(--bg-alt), #243447);
   padding: 1rem 1rem 1.1rem;
   border-radius: var(--radius);
   border: 2px solid var(--accent);
@@ -60,16 +60,16 @@ h2, h3 { margin-top: 2rem; font-weight: 700; color: var(--accent); }
   flex-direction: column;
   gap: 0.6rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 212, 170, 0.2);
 }
 .card:hover {
   border-color: var(--accent-alt);
-  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
   transform: translateY(-4px);
 }
 .card h3 { margin: 0 0 0.25rem; font-size: 1.05rem; color: var(--accent-light); }
 input[type="text"], input[type="number"] {
-  background: linear-gradient(135deg, #3d2a5c, #4a3470);
+  background: linear-gradient(135deg, #243447, #2d4a5c);
   border: 2px solid var(--blue-accent);
   color: var(--fg);
   padding: 0.55rem 0.65rem;
@@ -82,8 +82,8 @@ input[type="text"], input[type="number"] {
 input:focus { 
   outline: none;
   border-color: var(--green-accent);
-  box-shadow: 0 0 0 4px rgba(0, 255, 136, 0.2);
-  background: linear-gradient(135deg, #4a3470, #5a4180);
+  box-shadow: 0 0 0 4px rgba(0, 184, 148, 0.2);
+  background: linear-gradient(135deg, #2d4a5c, #36556b);
   transform: scale(1.02);
 }
 button {
@@ -96,27 +96,27 @@ button {
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 button.secondary {
-  background: linear-gradient(135deg, var(--blue-accent), #00b8d4);
+  background: linear-gradient(135deg, var(--blue-accent), #0984e3);
   color: white;
   border: 2px solid var(--blue-accent);
-  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(116, 185, 255, 0.3);
 }
 button:hover { 
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
 }
 button.secondary:hover {
-  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
 }
 .flex { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end; }
 .muted { opacity: 0.7; font-size: 0.85rem; }
 .badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--purple-accent), #9b59b6);
+  background: linear-gradient(135deg, var(--purple-accent), #6c5ce7);
   border: 2px solid var(--accent-light);
   color: white;
   padding: 0.25rem 0.7rem;
@@ -142,10 +142,10 @@ button.secondary:hover {
 .section {
   margin-top: 2rem;
   padding: 1.5rem 1.5rem;
-  background: linear-gradient(135deg, var(--bg-alt), #3d2a5c);
+  background: linear-gradient(135deg, var(--bg-alt), #243447);
   border: 2px solid var(--accent);
   border-radius: var(--radius);
-  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 212, 170, 0.2);
 }
 .inline-form {
   display: flex;
@@ -362,7 +362,7 @@ code, pre {
 
 .resource-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 212, 170, 0.2);
   text-decoration: none;
 }
 
@@ -385,7 +385,7 @@ code, pre {
 
 .help-list li {
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+  border-bottom: 1px solid rgba(0, 212, 170, 0.1);
 }
 
 .help-list li:last-child {
