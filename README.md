@@ -1,52 +1,61 @@
 # Board Game Probabilities
 
-A static (for now) site that lets you explore probability-related data for board games:
+A static web application for exploring probability-related data for board games:
 - Card symbol draw probabilities (hypergeometric calculations)
 - Dice roll sum distributions and custom faces
-- Modular per-game JSON data
+- Interactive probability calculators with real-time results
+- Modular per-game JSON data structure
 
-Designed to be easily upgraded later to pull live metadata (e.g., from BoardGameGeek) without restructuring the whole codebase.
-
-## Live Site (GitHub Pages)
-(Configure pages and add the URL here once enabled.)
+Designed to be easily upgraded later to pull live metadata (e.g., from BoardGameGeek) without restructuring the codebase.
 
 ## Features
-- Client-side routing (`#/game/slug`)
-- Per-game JSON files in `gameData/`
-- Manifest file to index games (`gameData/manifest.json`)
-- Hypergeometric calculations for "at least k successes" in draws
-- Dice sum distribution visualization
-- Extensible schema with `schemaVersion` for forward compatibility
+- **Interactive Calculators**: Real-time probability calculations for card draws and dice rolls
+- **Client-side routing** (`#/game/slug`) for seamless navigation
+- **Per-game JSON files** in `gameData/` with standardized schema
+- **Manifest system** to index games (`gameData/manifest.json`)
+- **Hypergeometric calculations** for "at least k successes" in card draws
+- **Dice sum distribution visualization** with probability bars
+- **Custom dice support** with string faces for unique game mechanics
+- **Extensible schema** with `schemaVersion` for forward compatibility
+- **Bold, vibrant design** optimized for readability and engagement
 
 ## Project Structure
 ```
-index.html
-style.css
-gameData/
-  manifest.json
-  sample-fantasy-duel.json
-js/
-  app.js
-  router.js
-  data/
-    dataLoader.js
-    schemaVersion.js
-  utils/
-    probability.js
-  renderers/
-    home.js
-    games.js
-    gameDetail.js
-    about.js
-    contribute.js
+index.html                 # Main HTML entry point
+style.css                  # Bold, vibrant CSS styling
+gameData/                  # Game data directory
+  manifest.json           # Game index and metadata
+  sample-fantasy-duel.json # Example game file
+  schema.json             # Data structure schema
+js/                        # JavaScript modules
+  app.js                  # Main application entry
+  router.js               # Client-side routing
+  data/                   # Data loading utilities
+    dataLoader.js         # JSON file loader with caching
+    schemaVersion.js      # Schema version management
+  utils/                  # Utility functions
+    probability.js        # Mathematical calculations
+  renderers/              # Page rendering modules
+    home.js               # Homepage renderer
+    games.js              # Games list renderer
+    gameDetail.js         # Individual game renderer
+    about.js              # About page renderer
+    contribute.js         # Contribution page renderer
 ```
 
 ## Adding a Game
-1. Create a new JSON file: `gameData/<your-slug>.json`
-2. Add an entry to `gameData/manifest.json` under `games`.
-3. Open a pull request.
+1. **Create JSON file**: Add `gameData/<your-slug>.json` with game data
+2. **Update manifest**: Add entry to `gameData/manifest.json` under `games` array
+3. **Submit contribution**: Open a pull request with your changes
 
-See `CONTRIBUTING.md` for the schema and examples.
+See `CONTRIBUTING.md` for detailed schema documentation and examples.
+
+## How to Use
+1. **Browse games**: Use the homepage search or browse the games list
+2. **Explore probabilities**: Navigate to any game page to access calculators
+3. **Card calculations**: Enter draw count and minimum successes for probability analysis
+4. **Dice distributions**: Click "Show Distribution" to see probability tables
+5. **Formula toggle**: Use the checkbox to show/hide mathematical formulas
 
 ## JSON Schema (Human-Oriented)
 ```jsonc
@@ -88,16 +97,26 @@ See `CONTRIBUTING.md` for the schema and examples.
 }
 ```
 
-## Probability Details
-- Card draws: Hypergeometric distribution (population `N`, successes `K`, draws `n`, threshold `k`).
-- Dice sums: Convolution of independent dice. Custom faces supported by listing string labels; sums only shown numerically (string faces are not aggregated into sums—future enhancement).
+## Probability Calculations
+- **Card draws**: Uses hypergeometric distribution to calculate probability of drawing at least `k` successes from `n` draws, given population size `N` and `K` success cards
+- **Dice sums**: Computes exact probability distributions using convolution of independent dice
+- **Custom dice**: Supports non-numeric faces (strings) with individual probability calculations
+- **Real-time results**: Instant calculation display with interpretive text and mathematical formulas
 
-## Roadmap Ideas
-- Add cumulative probability graphs
-- LocalStorage to remember recent games
-- Optional remote fetcher wrapper
-- BGG ID autolookup (when dynamic hosting is possible)
-- Symbol synergy scenarios (multi-symbol probability)
+## Technical Details
+- **Client-side only**: No server required, runs entirely in the browser  
+- **ES6 modules**: Modern JavaScript with clean separation of concerns
+- **JSON-based data**: Extensible schema for easy game additions
+- **Responsive design**: Works on desktop and mobile devices
+- **Accessible**: Proper semantic HTML and keyboard navigation support
+
+## Future Enhancements
+- Add cumulative probability graphs and visualizations
+- Implement LocalStorage for recent games and preferences  
+- Create remote data fetcher wrapper for external APIs
+- Add BGG ID auto-lookup integration (when dynamic hosting is available)
+- Expand symbol synergy scenarios (multi-symbol probability calculations)
+- Add dice comparison tools and statistical analysis
 
 ## License
 See `LICENSE`.
