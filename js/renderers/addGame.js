@@ -200,13 +200,24 @@ export function initializeAddGameForm() {
     `;
     container.appendChild(deckDiv);
     
+    // Add event listener for deck name changes to update dropdowns
+    const deckNameInput = deckDiv.querySelector('.deck-name');
+    deckNameInput.addEventListener('input', () => {
+      updateAllDeckDropdowns();
+    });
+    
     deckDiv.querySelector('.remove-deck').addEventListener('click', () => {
       deckDiv.remove();
+      // Update dropdowns after removing deck
+      updateAllDeckDropdowns();
     });
     
     deckDiv.querySelector('.add-symbol').addEventListener('click', () => {
       addSymbol(deckDiv.querySelector('.symbols-list'));
     });
+    
+    // Update dropdowns immediately after adding new deck
+    updateAllDeckDropdowns();
   }
   
   function addSymbol(container) {
@@ -390,7 +401,9 @@ export function initializeAddGameForm() {
       <div class="form-group-inline">
         <div class="form-group">
           <label>Target Deck Name</label>
-          <input type="text" class="target-deck-name" placeholder="e.g., Power Cards" required>
+          <select class="target-deck-name" required>
+            <option value="">Select existing deck...</option>
+          </select>
         </div>
         <button type="button" class="btn btn-small btn-danger remove-mod">✖</button>
       </div>
@@ -402,12 +415,59 @@ export function initializeAddGameForm() {
     `;
     container.appendChild(modDiv);
     
+    // Populate dropdown with existing deck names
+    populateDeckDropdown(modDiv.querySelector('.target-deck-name'));
+    
     modDiv.querySelector('.remove-mod').addEventListener('click', () => {
       modDiv.remove();
     });
     
     modDiv.querySelector('.add-mod-symbol').addEventListener('click', () => {
       addSymbol(modDiv.querySelector('.mod-symbols-list'));
+    });
+  }
+  
+  // Function to populate deck dropdown with existing deck names
+  function populateDeckDropdown(selectElement) {
+    // Clear existing options except the default one
+    selectElement.innerHTML = '<option value="">Select existing deck...</option>';
+    
+    // Get all deck names from the base game section
+    const deckNames = [];
+    document.querySelectorAll('#cards-container .deck-item').forEach(deckItem => {
+      const deckNameInput = deckItem.querySelector('.deck-name');
+      if (deckNameInput && deckNameInput.value.trim()) {
+        deckNames.push(deckNameInput.value.trim());
+      }
+    });
+    
+    // Add options for each deck
+    deckNames.forEach(deckName => {
+      const option = document.createElement('option');
+      option.value = deckName;
+      option.textContent = deckName;
+      selectElement.appendChild(option);
+    });
+    
+    // If no decks exist, show helpful message
+    if (deckNames.length === 0) {
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = 'Add decks in Card Decks section first';
+      option.disabled = true;
+      selectElement.appendChild(option);
+    }
+  }
+  
+  // Function to update all deck dropdowns when deck names change
+  function updateAllDeckDropdowns() {
+    document.querySelectorAll('.target-deck-name').forEach(dropdown => {
+      const currentValue = dropdown.value;
+      populateDeckDropdown(dropdown);
+      // Try to restore the previous selection if it still exists
+      if (currentValue) {
+        dropdown.value = currentValue;
+      }
     });
   }
   
