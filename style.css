@@ -127,6 +127,61 @@ button.secondary:hover {
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
+
+/* Game header layout */
+.game-header {
+  margin-bottom: 2rem;
+}
+
+.game-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.game-title-section h2 {
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* BGG Button Styling */
+.bgg-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #ff6900, #e55100);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 105, 0, 0.3);
+  border: 2px solid #ff8a50;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+.bgg-button:hover {
+  background: linear-gradient(135deg, #ff8a50, #ff6900);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 105, 0, 0.4);
+  text-decoration: none;
+  color: white;
+}
+
+.bgg-button .bgg-icon {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.bgg-button .bgg-text {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
 .error { color: var(--danger); }
 .table-like {
   border-collapse: collapse;

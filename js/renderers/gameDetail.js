@@ -14,12 +14,21 @@ export async function renderGameDetail({ slug }) {
 
 function gameDetailHTML(game, slug) {
   return `
-    <h2>${game.name}</h2>
-    <p>${game.description || ''}</p>
-    <div class="muted">
-      ${(game.tags || []).map(t=>`<span class="badge">${t}</span>`).join(' ')}
-      ${game.bgg_id ? `<a class="badge" target="_blank" rel="noopener" href="https://boardgamegeek.com/boardgame/${game.bgg_id}">BGG</a>` : ''}
-      ${statusBadge(game.status)}
+    <div class="game-header">
+      <div class="game-title-section">
+        <h2>${game.name}</h2>
+        ${game.bgg_id ? `
+          <a class="bgg-button" target="_blank" rel="noopener" href="https://boardgamegeek.com/boardgame/${game.bgg_id}" title="View on BoardGameGeek">
+            <span class="bgg-icon">🎲</span>
+            <span class="bgg-text">View on BGG</span>
+          </a>
+        ` : ''}
+      </div>
+      <p>${game.description || ''}</p>
+      <div class="muted">
+        ${(game.tags || []).map(t=>`<span class="badge">${t}</span>`).join(' ')}
+        ${statusBadge(game.status)}
+      </div>
     </div>
     ${tasksSection(game)}
     ${expansionsSection(game)}
