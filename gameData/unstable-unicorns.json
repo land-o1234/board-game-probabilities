@@ -23,6 +23,71 @@
       }
     ]
   },
+  "expansions": [
+    {
+      "name": "Dragons Expansion",
+      "enabled": true,
+      "description": "Adds fierce dragons that can be tamed or fought, introducing risk/reward mechanics.",
+      "adds_to": {
+        "cards": {
+          "Main Deck": {
+            "symbols": [
+              { "name": "Dragon Cards", "count": 27 },
+              { "name": "Dragon Tamer Cards", "count": 8 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Rainbow Apocalypse",
+      "enabled": false,
+      "description": "Introduces apocalypse mechanics that can end the game early with different victory conditions.",
+      "new_components": {
+        "cards": [
+          {
+            "deck_name": "Apocalypse Deck",
+            "total_cards": 27,
+            "symbols": [
+              { "name": "Apocalypse Cards", "count": 15 },
+              { "name": "Salvation Cards", "count": 12 }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "NSFW Expansion",
+      "enabled": false,
+      "description": "Adult-themed version with inappropriate humor and mature content.",
+      "adds_to": {
+        "cards": {
+          "Main Deck": {
+            "symbols": [
+              { "name": "NSFW Unicorns", "count": 20 },
+              { "name": "NSFW Magic Cards", "count": 15 },
+              { "name": "NSFW Instant Cards", "count": 18 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Unicorns of Legend",
+      "enabled": true,
+      "description": "Legendary unicorns with powerful abilities that change the game dynamics.",
+      "adds_to": {
+        "cards": {
+          "Main Deck": {
+            "symbols": [
+              { "name": "Legendary Unicorns", "count": 14 },
+              { "name": "Legend Support Cards", "count": 13 }
+            ]
+          }
+        }
+      }
+    }
+  ],
   "meta": {
     "created": "2025-08-11T13:25:00Z",
     "source": "manual",

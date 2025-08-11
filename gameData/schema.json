@@ -81,6 +81,96 @@
       },
       "additionalProperties": true
     },
+    "expansions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "enabled"],
+        "properties": {
+          "name": { "type": "string" },
+          "enabled": { "type": "boolean" },
+          "description": { "type": "string" },
+          "adds_to": {
+            "type": "object",
+            "properties": {
+              "cards": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "symbols": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["name", "count"],
+                        "properties": {
+                          "name": { "type": "string" },
+                          "count": { "type": "integer", "minimum": 0 }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "new_components": {
+            "type": "object",
+            "properties": {
+              "cards": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["total_cards", "symbols"],
+                  "properties": {
+                    "deck_name": { "type": "string" },
+                    "total_cards": { "type": "integer", "minimum": 1 },
+                    "symbols": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["name", "count"],
+                        "properties": {
+                          "name": { "type": "string" },
+                          "count": { "type": "integer", "minimum": 0 }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "dice": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["dice"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "dice": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "faces": {
+                            "oneOf": [
+                              { "type": "integer", "minimum": 2 },
+                              { "type": "array", "items": { "type": ["integer","string"] }, "minItems": 2 }
+                            ]
+                          }
+                        },
+                        "required": ["faces"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    },
     "meta": {
       "type": "object",
       "properties": {

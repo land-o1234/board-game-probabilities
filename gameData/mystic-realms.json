@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "0.1.0",
+  "name": "Mystic Realms",
+  "slug": "mystic-realms",
+  "bgg_id": null,
+  "description": "A strategic card game where players build magical kingdoms using elemental powers and mystical creatures.",
+  "tags": ["cards", "strategy", "fantasy", "deck-building"],
+  "status": "complete",
+  "components": {
+    "cards": [
+      {
+        "deck_name": "Base Kingdom Deck",
+        "total_cards": 120,
+        "symbols": [
+          { "name": "Fire Spells", "count": 20 },
+          { "name": "Water Spells", "count": 20 },
+          { "name": "Earth Spells", "count": 20 },
+          { "name": "Air Spells", "count": 20 },
+          { "name": "Creature Cards", "count": 25 },
+          { "name": "Artifact Cards", "count": 15 }
+        ]
+      },
+      {
+        "deck_name": "Quest Cards",
+        "total_cards": 40,
+        "symbols": [
+          { "name": "Easy Quests", "count": 20 },
+          { "name": "Hard Quests", "count": 15 },
+          { "name": "Epic Quests", "count": 5 }
+        ]
+      }
+    ],
+    "dice": [
+      {
+        "name": "Elemental Dice",
+        "description": "Two six-sided dice with elemental symbols",
+        "dice": [
+          { "faces": ["🔥", "💧", "🌍", "💨", "⭐", "🌙"] },
+          { "faces": ["🔥", "💧", "🌍", "💨", "⭐", "🌙"] }
+        ]
+      }
+    ]
+  },
+  "expansions": [
+    {
+      "name": "Shadow Realm",
+      "enabled": true,
+      "description": "Introduces dark magic and shadow creatures to the game.",
+      "adds_to": {
+        "cards": {
+          "Base Kingdom Deck": {
+            "symbols": [
+              { "name": "Shadow Spells", "count": 18 },
+              { "name": "Dark Creatures", "count": 12 }
+            ]
+          }
+        }
+      },
+      "new_components": {
+        "cards": [
+          {
+            "deck_name": "Corruption Deck",
+            "total_cards": 25,
+            "symbols": [
+              { "name": "Corruption Tokens", "count": 15 },
+              { "name": "Redemption Cards", "count": 10 }
+            ]
+          }
+        ],
+        "dice": [
+          {
+            "name": "Shadow Die",
+            "description": "A special die for shadow magic",
+            "dice": [
+              { "faces": ["💀", "🖤", "⚫", "👁", "🌑", "⭐"] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Celestial Heights",
+      "enabled": true,
+      "description": "Adds heavenly magic and angelic allies to counter the darkness.",
+      "adds_to": {
+        "cards": {
+          "Base Kingdom Deck": {
+            "symbols": [
+              { "name": "Light Spells", "count": 16 },
+              { "name": "Angel Cards", "count": 14 }
+            ]
+          },
+          "Quest Cards": {
+            "symbols": [
+              { "name": "Divine Quests", "count": 8 }
+            ]
+          }
+        }
+      },
+      "new_components": {
+        "dice": [
+          {
+            "name": "Divine Die",
+            "description": "A gleaming die channeling celestial power",
+            "dice": [
+              { "faces": ["✨", "🤍", "⚪", "👼", "🌟", "☀️"] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Dragon's Hoard",
+      "enabled": false,
+      "description": "Powerful dragons and their treasures enter the realm.",
+      "new_components": {
+        "cards": [
+          {
+            "deck_name": "Dragon Deck",
+            "total_cards": 32,
+            "symbols": [
+              { "name": "Ancient Dragons", "count": 8 },
+              { "name": "Young Dragons", "count": 12 },
+              { "name": "Dragon Treasures", "count": 12 }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Elemental Chaos",
+      "enabled": false,
+      "description": "Unstable elemental magic creates unpredictable effects.",
+      "adds_to": {
+        "cards": {
+          "Base Kingdom Deck": {
+            "symbols": [
+              { "name": "Chaos Fire", "count": 6 },
+              { "name": "Chaos Water", "count": 6 },
+              { "name": "Chaos Earth", "count": 6 },
+              { "name": "Chaos Air", "count": 6 }
+            ]
+          }
+        }
+      },
+      "new_components": {
+        "dice": [
+          {
+            "name": "Chaos Dice",
+            "description": "Unpredictable dice with mixed elemental energies",
+            "dice": [
+              { "faces": ["🔥💧", "🌍💨", "⭐🌙", "❓", "💥", "🌪️"] },
+              { "faces": ["🔥🌍", "💧💨", "⭐💥", "❓", "🌙", "⚡"] }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "created": "2025-01-12T14:30:00Z",
+    "source": "form",
+    "attribution": "ExpansionExpert"
+  }
+}

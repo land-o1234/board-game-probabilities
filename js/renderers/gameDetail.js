@@ -22,6 +22,7 @@ function gameDetailHTML(game, slug) {
       ${statusBadge(game.status)}
     </div>
     ${tasksSection(game)}
+    ${expansionsSection(game)}
     ${cardsSection(game)}
     ${diceSection(game)}
     <div class="section">
@@ -240,6 +241,104 @@ function statusBadge(status) {
   
   const config = statusConfig[status] || statusConfig['incomplete'];
   return `<span class="badge ${config.class}">${config.emoji} ${config.label}</span>`;
+}
+
+function expansionsSection(game) {
+  if (!game.expansions || !game.expansions.length) return '';
+  
+  const expansionCards = game.expansions.map(expansion => {
+    const statusIcon = expansion.enabled ? '✅ Enabled' : '🔒 Disabled';
+    const statusClass = expansion.enabled ? 'expansion-enabled' : 'expansion-disabled';
+    
+    let contentHTML = '';
+    
+    // Show what this expansion adds to existing decks
+    if (expansion.adds_to && expansion.adds_to.cards) {
+      const addsToDecksList = Object.entries(expansion.adds_to.cards).map(([deckName, deckData]) => {
+        const symbolsList = deckData.symbols.map(symbol => 
+          `<span class="symbol-count">${symbol.name}: ${symbol.count}</span>`
+        ).join(', ');
+        return `<li><strong>${deckName}:</strong> ${symbolsList}</li>`;
+      }).join('');
+      
+      contentHTML += `
+        <div class="expansion-modifications">
+          <h6>Adds to Existing Decks:</h6>
+          <ul class="deck-modifications">${addsToDecksList}</ul>
+        </div>
+      `;
+    }
+    
+    // Show new components this expansion introduces
+    if (expansion.new_components) {
+      let newComponentsHTML = '';
+      
+      if (expansion.new_components.cards) {
+        const newDecksList = expansion.new_components.cards.map(deck => {
+          const symbolsList = deck.symbols.map(symbol => 
+            `<span class="symbol-count">${symbol.name}: ${symbol.count}</span>`
+          ).join(', ');
+          return `<li><strong>${deck.deck_name}</strong> (${deck.total_cards} cards): ${symbolsList}</li>`;
+        }).join('');
+        
+        newComponentsHTML += `
+          <div class="new-component-section">
+            <h6>New Card Decks:</h6>
+            <ul class="new-decks">${newDecksList}</ul>
+          </div>
+        `;
+      }
+      
+      if (expansion.new_components.dice) {
+        const newDiceList = expansion.new_components.dice.map(diceSet => {
+          return `<li><strong>${diceSet.name}</strong>${diceSet.description ? `: ${diceSet.description}` : ''}</li>`;
+        }).join('');
+        
+        newComponentsHTML += `
+          <div class="new-component-section">
+            <h6>New Dice Sets:</h6>
+            <ul class="new-dice">${newDiceList}</ul>
+          </div>
+        `;
+      }
+      
+      if (newComponentsHTML) {
+        contentHTML += `
+          <div class="expansion-new-components">
+            <h6>New Components:</h6>
+            ${newComponentsHTML}
+          </div>
+        `;
+      }
+    }
+    
+    return `
+      <div class="expansion-card ${statusClass}">
+        <div class="expansion-header">
+          <h5>${expansion.name}</h5>
+          <span class="expansion-status">${statusIcon}</span>
+        </div>
+        ${expansion.description ? `<p class="expansion-description">${expansion.description}</p>` : ''}
+        ${contentHTML}
+      </div>
+    `;
+  }).join('');
+  
+  const enabledCount = game.expansions.filter(e => e.enabled).length;
+  const totalCount = game.expansions.length;
+  
+  return `
+    <div class="section expansions-section">
+      <h3>🚀 Expansions</h3>
+      <p class="expansion-summary">
+        <strong>${enabledCount}/${totalCount} expansions enabled</strong> - 
+        Toggle expansion checkboxes to modify the game content below.
+      </p>
+      <div class="expansions-grid">
+        ${expansionCards}
+      </div>
+    </div>
+  `;
 }
 
 function tasksSection(game) {

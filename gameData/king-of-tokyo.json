@@ -36,6 +36,79 @@
       }
     ]
   },
+  "expansions": [
+    {
+      "name": "Power Up!",
+      "enabled": true,
+      "description": "Adds Evolution cards unique to each monster, allowing for specialized strategies and abilities.",
+      "new_components": {
+        "cards": [
+          {
+            "deck_name": "Evolution Cards",
+            "total_cards": 56,
+            "symbols": [
+              { "name": "Gigazaur Evolutions", "count": 8 },
+              { "name": "The King Evolutions", "count": 8 },
+              { "name": "Alienoid Evolutions", "count": 8 },
+              { "name": "Meka Dragon Evolutions", "count": 8 },
+              { "name": "Cyber Kitty Evolutions", "count": 8 },
+              { "name": "Kraken Evolutions", "count": 8 },
+              { "name": "Pandakai Evolutions", "count": 8 }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Halloween",
+      "enabled": false,
+      "description": "Adds spooky costumes and new mechanics with the Boogey Woogey die.",
+      "adds_to": {
+        "cards": {
+          "Power Cards": {
+            "symbols": [
+              { "name": "Costume Cards", "count": 12 }
+            ]
+          }
+        }
+      },
+      "new_components": {
+        "cards": [
+          {
+            "deck_name": "Candy Cards",
+            "total_cards": 20,
+            "symbols": [
+              { "name": "Trick Cards", "count": 10 },
+              { "name": "Treat Cards", "count": 10 }
+            ]
+          }
+        ],
+        "dice": [
+          {
+            "name": "Boogey Woogey Die",
+            "description": "Special Halloween die with spooky effects",
+            "dice": [
+              { "faces": ["👻", "🎃", "🍬", "💀", "🦇", "✨"] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Dark Edition",
+      "enabled": false,
+      "description": "Darker, more strategic version with Wickedness tokens and cursed Power cards.",
+      "adds_to": {
+        "cards": {
+          "Power Cards": {
+            "symbols": [
+              { "name": "Cursed Power Cards", "count": 16 }
+            ]
+          }
+        }
+      }
+    }
+  ],
   "meta": {
     "created": "2025-08-11T13:27:00Z",
     "source": "manual",

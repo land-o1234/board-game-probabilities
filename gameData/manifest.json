@@ -28,6 +28,13 @@
       "tags": ["dice", "monsters", "area-control", "take-that"],
       "shortDescription": "Dice-rolling monster game with custom dice faces.",
       "schemaVersion": "0.1.0"
+    },
+    {
+      "slug": "mystic-realms",
+      "name": "Mystic Realms",
+      "tags": ["cards", "strategy", "fantasy", "deck-building"],
+      "shortDescription": "A strategic card game showcasing comprehensive expansion support.",
+      "schemaVersion": "0.1.0"
     }
   ]
 }

@@ -68,6 +68,13 @@ export function renderAddGame() {
       </div>
       
       <div class="form-section">
+        <h3>🚀 Expansions</h3>
+        <p>Add expansions that can be enabled/disabled to modify the base game.</p>
+        <div id="expansions-container"></div>
+        <button type="button" id="add-expansion-btn" class="btn btn-secondary">+ Add Expansion</button>
+      </div>
+      
+      <div class="form-section">
         <h3>👤 Attribution</h3>
         <div class="form-group">
           <label for="attribution">Your Name/Handle</label>
@@ -294,6 +301,193 @@ export function initializeAddGameForm() {
     });
   }
 
+  // Expansion management
+  let expansionCounter = 0;
+  document.getElementById('add-expansion-btn').addEventListener('click', addExpansion);
+  
+  function addExpansion() {
+    const container = document.getElementById('expansions-container');
+    const expansionDiv = document.createElement('div');
+    expansionDiv.className = 'expansion-item';
+    expansionDiv.innerHTML = `
+      <div class="expansion-header">
+        <div class="form-group-inline">
+          <div class="form-group">
+            <label>Expansion Name</label>
+            <input type="text" class="expansion-name" placeholder="e.g., Power Up!" required>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="expansion-enabled" checked> Enabled by default
+            </label>
+          </div>
+          <button type="button" class="btn btn-small btn-danger remove-expansion">✖</button>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="expansion-description" placeholder="Brief description of what this expansion adds"></textarea>
+        </div>
+      </div>
+      
+      <div class="expansion-content">
+        <div class="expansion-type-section">
+          <h5>How does this expansion modify the game?</h5>
+          <div class="expansion-tabs">
+            <button type="button" class="tab-btn active" data-tab="adds-to">Adds to Existing Decks</button>
+            <button type="button" class="tab-btn" data-tab="new-components">Creates New Components</button>
+          </div>
+          
+          <div class="tab-content adds-to-content">
+            <p>This expansion adds cards to existing decks in the base game.</p>
+            <div class="adds-to-container">
+              <button type="button" class="btn btn-small add-deck-modification">+ Add Deck Modification</button>
+            </div>
+          </div>
+          
+          <div class="tab-content new-components-content" style="display: none;">
+            <p>This expansion introduces completely new card decks or dice sets.</p>
+            <div class="new-components-cards">
+              <h6>New Card Decks</h6>
+              <div class="expansion-new-cards"></div>
+              <button type="button" class="btn btn-small add-expansion-deck">+ Add New Deck</button>
+            </div>
+            <div class="new-components-dice">
+              <h6>New Dice Sets</h6>
+              <div class="expansion-new-dice"></div>
+              <button type="button" class="btn btn-small add-expansion-dice">+ Add New Dice Set</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(expansionDiv);
+    
+    // Set up tab switching
+    const tabBtns = expansionDiv.querySelectorAll('.tab-btn');
+    const tabContents = expansionDiv.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.style.display = 'none');
+        
+        btn.classList.add('active');
+        const targetTab = btn.dataset.tab;
+        expansionDiv.querySelector(`.${targetTab}-content`).style.display = 'block';
+      });
+    });
+    
+    // Remove expansion
+    expansionDiv.querySelector('.remove-expansion').addEventListener('click', () => {
+      expansionDiv.remove();
+    });
+    
+    // Add deck modification functionality
+    expansionDiv.querySelector('.add-deck-modification').addEventListener('click', () => {
+      addDeckModification(expansionDiv.querySelector('.adds-to-container'));
+    });
+    
+    // Add new expansion deck functionality
+    expansionDiv.querySelector('.add-expansion-deck').addEventListener('click', () => {
+      addExpansionDeck(expansionDiv.querySelector('.expansion-new-cards'));
+    });
+    
+    // Add new expansion dice functionality
+    expansionDiv.querySelector('.add-expansion-dice').addEventListener('click', () => {
+      addExpansionDice(expansionDiv.querySelector('.expansion-new-dice'));
+    });
+  }
+  
+  function addDeckModification(container) {
+    const modDiv = document.createElement('div');
+    modDiv.className = 'deck-modification-item';
+    modDiv.innerHTML = `
+      <div class="form-group-inline">
+        <div class="form-group">
+          <label>Target Deck Name</label>
+          <input type="text" class="target-deck-name" placeholder="e.g., Power Cards" required>
+        </div>
+        <button type="button" class="btn btn-small btn-danger remove-mod">✖</button>
+      </div>
+      <div class="mod-symbols-container">
+        <h6>Additional Symbols/Types</h6>
+        <div class="mod-symbols-list"></div>
+        <button type="button" class="btn btn-small add-mod-symbol">+ Add Symbol</button>
+      </div>
+    `;
+    container.appendChild(modDiv);
+    
+    modDiv.querySelector('.remove-mod').addEventListener('click', () => {
+      modDiv.remove();
+    });
+    
+    modDiv.querySelector('.add-mod-symbol').addEventListener('click', () => {
+      addSymbol(modDiv.querySelector('.mod-symbols-list'));
+    });
+  }
+  
+  function addExpansionDeck(container) {
+    const deckDiv = document.createElement('div');
+    deckDiv.className = 'expansion-deck-item';
+    deckDiv.innerHTML = `
+      <div class="form-group-inline">
+        <div class="form-group">
+          <label>Deck Name</label>
+          <input type="text" class="expansion-deck-name" placeholder="e.g., Evolution Cards" required>
+        </div>
+        <div class="form-group">
+          <label>Total Cards</label>
+          <input type="number" class="expansion-deck-total" min="1" placeholder="e.g., 56" required>
+        </div>
+        <button type="button" class="btn btn-small btn-danger remove-expansion-deck">✖</button>
+      </div>
+      <div class="expansion-deck-symbols">
+        <h6>Card Symbols/Types</h6>
+        <div class="expansion-deck-symbols-list"></div>
+        <button type="button" class="btn btn-small add-expansion-deck-symbol">+ Add Symbol</button>
+      </div>
+    `;
+    container.appendChild(deckDiv);
+    
+    deckDiv.querySelector('.remove-expansion-deck').addEventListener('click', () => {
+      deckDiv.remove();
+    });
+    
+    deckDiv.querySelector('.add-expansion-deck-symbol').addEventListener('click', () => {
+      addSymbol(deckDiv.querySelector('.expansion-deck-symbols-list'));
+    });
+  }
+  
+  function addExpansionDice(container) {
+    const diceDiv = document.createElement('div');
+    diceDiv.className = 'expansion-dice-item';
+    diceDiv.innerHTML = `
+      <div class="form-group">
+        <label>Dice Set Name</label>
+        <input type="text" class="expansion-dice-name" placeholder="e.g., Chaos Dice" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" class="expansion-dice-description" placeholder="e.g., Unpredictable elemental dice">
+      </div>
+      <div class="expansion-dice-list">
+        <h6>Individual Dice</h6>
+        <div class="expansion-individual-dice"></div>
+        <button type="button" class="btn btn-small add-expansion-die">+ Add Die</button>
+      </div>
+      <button type="button" class="btn btn-small btn-danger remove-expansion-dice-set">✖ Remove Set</button>
+    `;
+    container.appendChild(diceDiv);
+    
+    diceDiv.querySelector('.remove-expansion-dice-set').addEventListener('click', () => {
+      diceDiv.remove();
+    });
+    
+    diceDiv.querySelector('.add-expansion-die').addEventListener('click', () => {
+      addIndividualDie(diceDiv.querySelector('.expansion-individual-dice'));
+    });
+  }
+
   // Generate JSON
   document.getElementById('generate-json-btn').addEventListener('click', generateJSON);
   
@@ -424,6 +618,133 @@ export function initializeAddGameForm() {
       gameData.components.dice = dice;
     }
     
+    // Expansions
+    const expansions = [];
+    document.querySelectorAll('.expansion-item').forEach(item => {
+      const name = item.querySelector('.expansion-name').value.trim();
+      const enabled = item.querySelector('.expansion-enabled').checked;
+      const description = item.querySelector('.expansion-description').value.trim();
+      
+      if (name) {
+        const expansion = {
+          name: name,
+          enabled: enabled
+        };
+        
+        if (description) {
+          expansion.description = description;
+        }
+        
+        // Collect adds_to modifications
+        const addsTo = {};
+        const cardMods = {};
+        item.querySelectorAll('.deck-modification-item').forEach(modItem => {
+          const targetDeck = modItem.querySelector('.target-deck-name').value.trim();
+          if (targetDeck) {
+            const symbols = [];
+            modItem.querySelectorAll('.symbol-item').forEach(symbolItem => {
+              const symbolName = symbolItem.querySelector('.symbol-name').value.trim();
+              const symbolCount = parseInt(symbolItem.querySelector('.symbol-count').value);
+              if (symbolName && !isNaN(symbolCount)) {
+                symbols.push({ name: symbolName, count: symbolCount });
+              }
+            });
+            if (symbols.length > 0) {
+              cardMods[targetDeck] = { symbols: symbols };
+            }
+          }
+        });
+        if (Object.keys(cardMods).length > 0) {
+          addsTo.cards = cardMods;
+        }
+        if (Object.keys(addsTo).length > 0) {
+          expansion.adds_to = addsTo;
+        }
+        
+        // Collect new_components
+        const newComponents = {};
+        
+        // New card decks
+        const newCards = [];
+        item.querySelectorAll('.expansion-deck-item').forEach(deckItem => {
+          const deckName = deckItem.querySelector('.expansion-deck-name').value.trim();
+          const deckTotal = parseInt(deckItem.querySelector('.expansion-deck-total').value);
+          
+          if (deckName && deckTotal) {
+            const symbols = [];
+            deckItem.querySelectorAll('.symbol-item').forEach(symbolItem => {
+              const symbolName = symbolItem.querySelector('.symbol-name').value.trim();
+              const symbolCount = parseInt(symbolItem.querySelector('.symbol-count').value);
+              if (symbolName && !isNaN(symbolCount)) {
+                symbols.push({ name: symbolName, count: symbolCount });
+              }
+            });
+            
+            const deck = {
+              deck_name: deckName,
+              total_cards: deckTotal,
+              symbols: symbols
+            };
+            newCards.push(deck);
+          }
+        });
+        if (newCards.length > 0) {
+          newComponents.cards = newCards;
+        }
+        
+        // New dice sets
+        const newDice = [];
+        item.querySelectorAll('.expansion-dice-item').forEach(diceItem => {
+          const diceName = diceItem.querySelector('.expansion-dice-name').value.trim();
+          const diceDescription = diceItem.querySelector('.expansion-dice-description').value.trim();
+          
+          if (diceName) {
+            const diceArray = [];
+            diceItem.querySelectorAll('.die-item').forEach(dieItem => {
+              const type = dieItem.querySelector('.die-type').value;
+              if (type === 'standard') {
+                const faces = parseInt(dieItem.querySelector('.die-faces').value);
+                if (!isNaN(faces) && faces >= 2) {
+                  diceArray.push({ faces: faces });
+                }
+              } else {
+                const customFaces = dieItem.querySelector('.custom-faces').value.trim();
+                if (customFaces) {
+                  const facesArray = customFaces.split(',').map(f => f.trim()).filter(f => f);
+                  if (facesArray.length >= 2) {
+                    diceArray.push({ faces: facesArray });
+                  }
+                }
+              }
+            });
+            
+            if (diceArray.length > 0) {
+              const diceSet = {
+                name: diceName,
+                dice: diceArray
+              };
+              if (diceDescription) {
+                diceSet.description = diceDescription;
+              }
+              newDice.push(diceSet);
+            }
+          }
+        });
+        if (newDice.length > 0) {
+          newComponents.dice = newDice;
+        }
+        
+        if (Object.keys(newComponents).length > 0) {
+          expansion.new_components = newComponents;
+        }
+        
+        expansions.push(expansion);
+      }
+    });
+    if (expansions.length > 0) {
+      gameData.expansions = expansions;
+    }
+    
     // Meta
     const attribution = document.getElementById('attribution').value.trim();
     gameData.meta = {
@@ -455,6 +776,7 @@ export function initializeAddGameForm() {
       document.getElementById('cards-container').innerHTML = '';
       document.getElementById('dice-container').innerHTML = '';
       document.getElementById('tasks-container').innerHTML = '';
+      document.getElementById('expansions-container').innerHTML = '';
       document.getElementById('json-output').style.display = 'none';
       document.getElementById('tasks-section').style.display = 'none';
       slugInput.dataset.manual = '';
