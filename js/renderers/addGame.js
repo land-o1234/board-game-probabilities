@@ -69,7 +69,7 @@ export function renderAddGame() {
       
       <div class="form-section">
         <h3>🚀 Expansions</h3>
-        <p>Add expansions that can be enabled/disabled to modify the base game.</p>
+        <p>Add expansions that can modify the base game by adding to existing components or creating new ones. Each expansion can do both!</p>
         <div id="expansions-container"></div>
         <button type="button" id="add-expansion-btn" class="btn btn-secondary">+ Add Expansion</button>
       </div>
@@ -312,11 +312,12 @@ export function initializeAddGameForm() {
     expansionDiv.innerHTML = `
       <div class="expansion-header">
         <div class="form-group-inline">
-          <div class="form-group">
+          <div class="form-group" style="flex: 1;">
             <label>Expansion Name</label>
             <input type="text" class="expansion-name" placeholder="e.g., Power Up!" required>
           </div>
           <div class="form-group">
+            <label>Default State</label>
             <label class="checkbox-label">
               <input type="checkbox" class="expansion-enabled" checked> Enabled by default
             </label>
@@ -324,58 +325,42 @@ export function initializeAddGameForm() {
           <button type="button" class="btn btn-small btn-danger remove-expansion">✖</button>
         </div>
         <div class="form-group">
-          <label>Description</label>
-          <textarea class="expansion-description" placeholder="Brief description of what this expansion adds"></textarea>
+          <label>Description (optional)</label>
+          <textarea class="expansion-description" placeholder="Brief description of what this expansion adds" rows="2"></textarea>
         </div>
       </div>
       
       <div class="expansion-content">
-        <div class="expansion-type-section">
-          <h5>How does this expansion modify the game?</h5>
-          <div class="expansion-tabs">
-            <button type="button" class="tab-btn active" data-tab="adds-to">Adds to Existing Decks</button>
-            <button type="button" class="tab-btn" data-tab="new-components">Creates New Components</button>
+        <div class="expansion-section adds-to-section">
+          <div class="section-header">
+            <h5>➕ Adds to Existing Decks</h5>
+            <p class="section-description">Add cards to decks that already exist in the base game (optional)</p>
+          </div>
+          <div class="adds-to-container"></div>
+          <button type="button" class="btn btn-small btn-secondary add-deck-modification">+ Add Deck Modification</button>
+        </div>
+        
+        <div class="expansion-section new-components-section">
+          <div class="section-header">
+            <h5>🆕 Creates New Components</h5>
+            <p class="section-description">Introduce entirely new card decks and dice sets (optional)</p>
           </div>
           
-          <div class="tab-content adds-to-content">
-            <p>This expansion adds cards to existing decks in the base game.</p>
-            <div class="adds-to-container">
-              <button type="button" class="btn btn-small add-deck-modification">+ Add Deck Modification</button>
-            </div>
+          <div class="new-cards-subsection">
+            <h6>New Card Decks</h6>
+            <div class="expansion-new-cards"></div>
+            <button type="button" class="btn btn-small btn-secondary add-expansion-deck">+ Add New Deck</button>
           </div>
           
-          <div class="tab-content new-components-content" style="display: none;">
-            <p>This expansion introduces completely new card decks or dice sets.</p>
-            <div class="new-components-cards">
-              <h6>New Card Decks</h6>
-              <div class="expansion-new-cards"></div>
-              <button type="button" class="btn btn-small add-expansion-deck">+ Add New Deck</button>
-            </div>
-            <div class="new-components-dice">
-              <h6>New Dice Sets</h6>
-              <div class="expansion-new-dice"></div>
-              <button type="button" class="btn btn-small add-expansion-dice">+ Add New Dice Set</button>
-            </div>
+          <div class="new-dice-subsection">
+            <h6>New Dice Sets</h6>
+            <div class="expansion-new-dice"></div>
+            <button type="button" class="btn btn-small btn-secondary add-expansion-dice">+ Add New Dice Set</button>
           </div>
         </div>
       </div>
     `;
     container.appendChild(expansionDiv);
-    
-    // Set up tab switching
-    const tabBtns = expansionDiv.querySelectorAll('.tab-btn');
-    const tabContents = expansionDiv.querySelectorAll('.tab-content');
-    
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.style.display = 'none');
-        
-        btn.classList.add('active');
-        const targetTab = btn.dataset.tab;
-        expansionDiv.querySelector(`.${targetTab}-content`).style.display = 'block';
-      });
-    });
     
     // Remove expansion
     expansionDiv.querySelector('.remove-expansion').addEventListener('click', () => {

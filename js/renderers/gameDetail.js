@@ -2,14 +2,76 @@ import { loadGame } from '../data/dataLoader.js';
 import { hypergeometricAtLeast } from '../utils/probability.js';
 import { diceSumDistribution, normalizeDistribution } from '../utils/probability.js';
 
+// Global reference to current game data
+let currentGameData = null;
+
 export async function renderGameDetail({ slug }) {
   console.log('GameDetail rendering with slug:', slug);
   try {
-    const game = await loadGame(slug);
+    let game = await loadGame(slug);
+    game = loadExpansionStates(game); // Load saved expansion states
+    currentGameData = game; // Store for toggle functionality
     return gameDetailHTML(game, slug);
   } catch (e) {
     return `<h2>Game Not Found</h2><p class="error">${e.message}</p>`;
   }
+}
+
+// Global function for expansion toggling
+window.toggleExpansion = function(index, enabled) {
+  if (!currentGameData || !currentGameData.expansions) return;
+  
+  // Update the expansion state
+  currentGameData.expansions[index].enabled = enabled;
+  
+  // Update the visual status
+  const expansionCard = document.querySelector(`.expansion-card[data-expansion-index="${index}"]`);
+  if (expansionCard) {
+    const statusSpan = expansionCard.querySelector('.expansion-status');
+    const newStatusIcon = enabled ? '✅ Enabled' : '🔒 Disabled';
+    const newStatusClass = enabled ? 'expansion-enabled' : 'expansion-disabled';
+    
+    // Update status text
+    statusSpan.textContent = newStatusIcon;
+    
+    // Update card class
+    expansionCard.className = `expansion-card ${newStatusClass}`;
+    expansionCard.setAttribute('data-expansion-index', index);
+    
+    // Update the enabled count
+    const enabledCount = currentGameData.expansions.filter(e => e.enabled).length;
+    const totalCount = currentGameData.expansions.length;
+    const countElement = document.getElementById('expansion-count');
+    if (countElement) {
+      countElement.textContent = `${enabledCount}/${totalCount}`;
+    }
+    
+    // Store in localStorage for persistence
+    const storageKey = `expansions_${currentGameData.slug}`;
+    const expansionStates = currentGameData.expansions.map(exp => exp.enabled);
+    localStorage.setItem(storageKey, JSON.stringify(expansionStates));
+  }
+};
+
+// Function to load expansion states from localStorage
+function loadExpansionStates(game) {
+  const storageKey = `expansions_${game.slug}`;
+  const savedStates = localStorage.getItem(storageKey);
+  
+  if (savedStates) {
+    try {
+      const states = JSON.parse(savedStates);
+      if (states.length === game.expansions.length) {
+        game.expansions.forEach((expansion, index) => {
+          expansion.enabled = states[index];
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to load expansion states:', e);
+    }
+  }
+  
+  return game;
 }
 
 function gameDetailHTML(game, slug) {
@@ -255,7 +317,7 @@ function statusBadge(status) {
 function expansionsSection(game) {
   if (!game.expansions || !game.expansions.length) return '';
   
-  const expansionCards = game.expansions.map(expansion => {
+  const expansionCards = game.expansions.map((expansion, index) => {
     const statusIcon = expansion.enabled ? '✅ Enabled' : '🔒 Disabled';
     const statusClass = expansion.enabled ? 'expansion-enabled' : 'expansion-disabled';
     
@@ -322,10 +384,16 @@ function expansionsSection(game) {
     }
     
     return `
-      <div class="expansion-card ${statusClass}">
+      <div class="expansion-card ${statusClass}" data-expansion-index="${index}">
         <div class="expansion-header">
           <h5>${expansion.name}</h5>
-          <span class="expansion-status">${statusIcon}</span>
+          <div class="expansion-toggle">
+            <label class="toggle-switch">
+              <input type="checkbox" ${expansion.enabled ? 'checked' : ''} onchange="toggleExpansion(${index}, this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="expansion-status">${statusIcon}</span>
+          </div>
         </div>
         ${expansion.description ? `<p class="expansion-description">${expansion.description}</p>` : ''}
         ${contentHTML}
@@ -340,8 +408,8 @@ function expansionsSection(game) {
     <div class="section expansions-section">
       <h3>🚀 Expansions</h3>
       <p class="expansion-summary">
-        <strong>${enabledCount}/${totalCount} expansions enabled</strong> - 
-        Toggle expansion checkboxes to modify the game content below.
+        <strong><span id="expansion-count">${enabledCount}/${totalCount}</span> expansions enabled</strong> - 
+        Toggle expansion switches to modify the game content below.
       </p>
       <div class="expansions-grid">
         ${expansionCards}
