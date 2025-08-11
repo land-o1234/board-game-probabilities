@@ -128,7 +128,8 @@ document.addEventListener('submit', (e) => {
 
 async function runCardCalc(deckIndex, symbolName, draws, atLeast) {
   // Need currently loaded game slug from location:
-  const slug = window.location.hash.replace(/^#\/game\//, '');
+  const slug = window.location.hash.replace('#/game/', '')
+  main
   const { loadGame } = await import('../data/dataLoader.js');
   const game = await loadGame(slug);
   const deck = game.components.cards[deckIndex];
@@ -176,7 +177,8 @@ document.addEventListener('click', async (e) => {
   const btn = e.target;
   if (btn.dataset.diceDist !== undefined) {
     const idx = parseInt(btn.dataset.diceDist,10);
-    const slug = window.location.hash.replace(/^#\/game\//, '');
+    const slug = window.location.hash.replace('#/game/', '');
+    main
     const { loadGame } = await import('../data/dataLoader.js');
     const game = await loadGame(slug);
     const diceSet = game.components.dice[idx];

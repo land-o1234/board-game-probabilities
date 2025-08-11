@@ -1,26 +1,37 @@
 import { searchGames } from '../data/dataLoader.js';
 
 export async function renderHome() {
-  const recent = await searchGames('');
-  const featured = recent.slice(0, 6);
-  return `
-    <section>
-      <h2>Discover Probability Tools</h2>
-      <p>Search for a game and explore card draw and dice probabilities. Add missing games via a pull request.</p>
-      <div class="inline-form">
-        <input id="home-search-input" type="text" placeholder="Search games..." />
-        <button id="home-search-btn">Search</button>
-      </div>
-      <div id="home-search-results"></div>
-    </section>
+  try {
+    const recent = await searchGames('');
+    console.log('Games loaded:', recent); // Add this for debugging
+    const featured = recent.slice(0, 6);
+    return `
+      <section>
+        <h2>Discover Probability Tools</h2>
+        <p>Search for a game and explore card draw and dice probabilities. Add missing games via a pull request.</p>
+        <div class="inline-form">
+          <input id="home-search-input" type="text" placeholder="Search games..." />
+          <button id="home-search-btn">Search</button>
+        </div>
+        <div id="home-search-results"></div>
+      </section>
 
-    <section class="section">
-      <h3>Recently Added</h3>
-      <div class="card-grid">
-        ${featured.map(g => gameCard(g)).join('') || '<p>No games yet.</p>'}
-      </div>
-    </section>
-  `;
+      <section class="section">
+        <h3>Recently Added</h3>
+        <div class="card-grid">
+          ${featured.length > 0 ? featured.map(g => gameCard(g)).join('') : '<p>No games loaded. Check console for errors.</p>'}
+        </div>
+      </section>
+    `;
+  } catch (error) {
+    console.error('Error loading games:', error);
+    return `
+      <section>
+        <h2>Discover Probability Tools</h2>
+        <p class="error">Error loading games: ${error.message}</p>
+      </section>
+    `;
+  }
 }
 
 function gameCard(g) {
