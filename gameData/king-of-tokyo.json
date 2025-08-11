@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "0.1.0",
+  "name": "King of Tokyo",
+  "slug": "king-of-tokyo",
+  "bgg_id": 70323,
+  "description": "Dice-rolling monster game where players compete to destroy Tokyo and each other.",
+  "tags": ["dice", "monsters", "area-control", "take-that"],
+  "status": "partial",
+  "tasks": [
+    { "description": "Add Power Up expansion dice details", "completed": false },
+    { "description": "Document all Power cards probability distributions", "completed": true }
+  ],
+  "components": {
+    "dice": [
+      {
+        "name": "Black Dice",
+        "description": "Six custom dice with energy, claws, hearts, and numbers",
+        "dice": [
+          { "faces": ["⚡", "👹", "💚", "1", "2", "3"] },
+          { "faces": ["⚡", "👹", "💚", "1", "2", "3"] },
+          { "faces": ["⚡", "👹", "💚", "1", "2", "3"] },
+          { "faces": ["⚡", "👹", "💚", "1", "2", "3"] },
+          { "faces": ["⚡", "👹", "💚", "1", "2", "3"] },
+          { "faces": ["⚡", "👹", "💚", "1", "2", "3"] }
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "deck_name": "Power Cards",
+        "total_cards": 66,
+        "symbols": [
+          { "name": "Keep", "count": 42 },
+          { "name": "Discard", "count": 24 }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "created": "2025-08-11T13:27:00Z",
+    "source": "manual",
+    "attribution": "MonsterFan"
+  }
+}

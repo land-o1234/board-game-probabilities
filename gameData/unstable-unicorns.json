@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "0.1.0",
+  "name": "Unstable Unicorns",
+  "slug": "unstable-unicorns",
+  "bgg_id": 234190,
+  "description": "A card game about unicorns, magic, and betrayal - featuring strategic hand management and take-that mechanics.",
+  "tags": ["cards", "strategy", "party", "unicorns"],
+  "status": "complete",
+  "components": {
+    "cards": [
+      {
+        "deck_name": "Main Deck",
+        "total_cards": 135,
+        "symbols": [
+          { "name": "Basic Unicorn", "count": 17 },
+          { "name": "Baby Unicorn", "count": 13 },
+          { "name": "Magic Unicorn", "count": 27 },
+          { "name": "Instant Card", "count": 26 },
+          { "name": "Upgrade Card", "count": 13 },
+          { "name": "Downgrade Card", "count": 15 },
+          { "name": "Neigh Card", "count": 24 }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "created": "2025-08-11T13:25:00Z",
+    "source": "manual",
+    "attribution": "GameAnalyst"
+  }
+}

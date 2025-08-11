@@ -19,7 +19,9 @@ function gameDetailHTML(game, slug) {
     <div class="muted">
       ${(game.tags || []).map(t=>`<span class="badge">${t}</span>`).join(' ')}
       ${game.bgg_id ? `<a class="badge" target="_blank" rel="noopener" href="https://boardgamegeek.com/boardgame/${game.bgg_id}">BGG</a>` : ''}
+      ${statusBadge(game.status)}
     </div>
+    ${tasksSection(game)}
     ${cardsSection(game)}
     ${diceSection(game)}
     <div class="section">
@@ -227,3 +229,43 @@ document.addEventListener('change', (e) => {
     });
   }
 });
+
+function statusBadge(status) {
+  if (!status || status === 'complete') return '';
+  
+  const statusConfig = {
+    'partial': { label: 'Partial Data', class: 'status-partial', emoji: '⚠️' },
+    'incomplete': { label: 'Incomplete', class: 'status-incomplete', emoji: '🚧' }
+  };
+  
+  const config = statusConfig[status] || statusConfig['incomplete'];
+  return `<span class="badge ${config.class}">${config.emoji} ${config.label}</span>`;
+}
+
+function tasksSection(game) {
+  if (!game.tasks || !game.tasks.length) return '';
+  
+  const taskList = game.tasks.map(task => {
+    const icon = task.completed ? '✅' : '❌';
+    const className = task.completed ? 'task-completed' : 'task-pending';
+    return `<li class="${className}">${icon} ${task.description}</li>`;
+  }).join('');
+  
+  const completedCount = game.tasks.filter(t => t.completed).length;
+  const totalCount = game.tasks.length;
+  const progressPercent = Math.round((completedCount / totalCount) * 100);
+  
+  return `
+    <div class="section tasks-section">
+      <h3>📋 Development Tasks</h3>
+      <div class="task-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${progressPercent}%"></div>
+        </div>
+        <span class="progress-text">${completedCount}/${totalCount} completed (${progressPercent}%)</span>
+      </div>
+      <ul class="task-list">${taskList}</ul>
+      <p class="muted">This game is a work in progress. Want to help? Check out our <a href="#/contribute">contribution guide</a>!</p>
+    </div>
+  `;
+}

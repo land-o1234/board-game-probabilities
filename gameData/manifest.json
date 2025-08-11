@@ -7,6 +7,27 @@
       "tags": ["cards", "dice"],
       "shortDescription": "Demo game entry showing cards + dice components.",
       "schemaVersion": "0.1.0"
+    },
+    {
+      "slug": "unstable-unicorns",
+      "name": "Unstable Unicorns",
+      "tags": ["cards", "strategy", "party", "unicorns"],
+      "shortDescription": "A card game about unicorns, magic, and betrayal.",
+      "schemaVersion": "0.1.0"
+    },
+    {
+      "slug": "gloomhaven",
+      "name": "Gloomhaven",
+      "tags": ["dungeon-crawler", "cards", "dice", "legacy", "tactical"],
+      "shortDescription": "Epic dungeon-crawling game with tactical combat.",
+      "schemaVersion": "0.1.0"
+    },
+    {
+      "slug": "king-of-tokyo",
+      "name": "King of Tokyo",
+      "tags": ["dice", "monsters", "area-control", "take-that"],
+      "shortDescription": "Dice-rolling monster game with custom dice faces.",
+      "schemaVersion": "0.1.0"
     }
   ]
 }

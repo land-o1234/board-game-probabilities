@@ -11,6 +11,22 @@
     "bgg_id": { "type": ["integer","null"], "minimum": 0 },
     "description": { "type": "string" },
     "tags": { "type": "array", "items": { "type": "string" } },
+    "status": { 
+      "type": "string", 
+      "enum": ["complete", "partial", "incomplete"],
+      "default": "complete"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "completed"],
+        "properties": {
+          "description": { "type": "string" },
+          "completed": { "type": "boolean" }
+        }
+      }
+    },
     "components": {
       "type": "object",
       "properties": {

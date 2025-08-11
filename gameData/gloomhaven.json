@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "0.1.0",
+  "name": "Gloomhaven",
+  "slug": "gloomhaven",
+  "bgg_id": 174430,
+  "description": "Epic dungeon-crawling game with tactical combat, card-driven mechanics, and persistent character progression.",
+  "tags": ["dungeon-crawler", "cards", "dice", "legacy", "tactical"],
+  "status": "incomplete",
+  "tasks": [
+    { "description": "Add all starting class ability cards", "completed": false },
+    { "description": "Document attack modifier deck composition", "completed": false },
+    { "description": "Add monster ability deck breakdowns", "completed": false },
+    { "description": "Include item probability calculations", "completed": false },
+    { "description": "Map out enhancement sticker probabilities", "completed": false }
+  ],
+  "components": {
+    "dice": [
+      {
+        "name": "Attack Modifier Dice",
+        "description": "Custom dice for determining attack modifiers",
+        "dice": [
+          { "faces": ["×0", "×0", "+0", "+0", "+0", "+0", "+0", "+0", "+0", "+0", "+0", "+1", "+1", "+1", "+1", "+1", "-1", "-1", "-1", "-1", "-1", "×2"] }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "created": "2025-08-11T13:26:00Z",
+    "source": "manual",
+    "attribution": "DungeonMaster"
+  }
+}
