@@ -66,15 +66,15 @@ export function renderContribute() {
     <div class="contribute-section">
       <h3>📚 Resources</h3>
       <div class="resources-grid">
-        <a href="#" class="resource-link">
+        <a href="gameData/schema.json" class="resource-link" target="_blank">
           <strong>📖 Schema Documentation</strong>
           <p>Learn the JSON structure for game data</p>
         </a>
-        <a href="#" class="resource-link">
+        <a href="#/games" class="resource-link">
           <strong>🎯 Example Games</strong>
           <p>See how existing games are structured</p>
         </a>
-        <a href="#" class="resource-link">
+        <a href="CONTRIBUTING.md" class="resource-link" target="_blank">
           <strong>🤝 Contributing Guidelines</strong>
           <p>Best practices and code of conduct</p>
         </a>
