@@ -118,5 +118,12 @@ See `CONTRIBUTING.md` for detailed schema documentation and examples.
 - Expand symbol synergy scenarios (multi-symbol probability calculations)
 - Add dice comparison tools and statistical analysis
 
+## Additional Tools
+
+### QR Code PDF Generator
+A Python script (`generate_qr_pdf.py`) is available to generate printable PDF pages with QR codes for the BG Stats app. This tool creates 3x3 grids of QR codes that can be printed and placed at board game cafes or events for easy game logging.
+
+See `QR_GENERATOR_README.md` for detailed usage instructions.
+
 ## License
 See `LICENSE`.
